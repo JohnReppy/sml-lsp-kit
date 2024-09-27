@@ -1,0 +1,16 @@
+# macOS finder
+.DS_Store
+
+## SML/NJ stuff ##
+.cm/
+
+## Other stuff ##
+*.tgz
+*.swp
+
+# autoconf files
+configure
+config.status
+autom4te.cache
+
+## Repo-specific files
