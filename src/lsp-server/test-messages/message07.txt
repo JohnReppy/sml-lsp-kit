@@ -1,0 +1,3 @@
+Content-Length: 250
+
+{"jsonrpc":"2.0","id":2,"method":"textDocument\/completion","params":{"context":{"triggerKind":1},"position":{"line":194,"character":72},"textDocument":{"uri":"file:\/\/\/Users\/jhr\/Work\/smlnj\/sml-llvm\/llvm-codegen\/runtime\/kernel\/globals.c"}}}

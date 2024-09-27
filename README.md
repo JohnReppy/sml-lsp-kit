@@ -68,5 +68,7 @@ There is a lot of work to do, here is a partial list.
         val decodeParams : (string * JSONRPC.value) list -> params
       end
     ```
+  * generate a signature for the registration functions implemented
+    in the server
 * Write a CML version of the server infrastructure
 * build a demo server; I'm thinking of a server for typed PCF

@@ -1,0 +1,25 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 John Reppy (https://cs.uchicago.edu/~jhr)
+ * All rights reserved.
+ *)
+
+Library
+
+  signature LANGUAGE_SERVER
+  structure ServerResult
+
+  functor ServerWithLoggingFn
+
+is
+
+  $/basis.cm
+  $/smlnj-lib.cm
+  $/json-lib.cm
+  ../json-rpc/json-rpc-lib.cm
+
+  language-server.sig
+  message-io.sml
+  server-result.sml
+  server-with-logging-fn.sml
+

@@ -1,0 +1,25 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2024 John Reppy (https://cs.uchicago.edu/~jhr)
+ * All rights reserved.
+ *
+ * CM file for IO tests
+ *)
+
+Library
+
+  structure MessageIO
+
+  structure Tests
+
+is
+
+  $/basis.cm
+  $/smlnj-lib.cm
+  $/json-lib.cm
+  ../json-rpc/json-rpc-lib.cm
+
+  message-io.sml
+
+  tests.sml
+
