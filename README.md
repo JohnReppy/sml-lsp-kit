@@ -5,7 +5,7 @@
 ## Overview
 
 This repository contains infrastructure for writing [https://microsoft.github.io/language-server-protocol/](**LSP**)
-servers (and possibly clients) in Standard ML(***SML**).  It has two parts:
+servers (and possibly clients) in Standard ML (**SML**).  It has two parts:
 1. code for generating type declarations and message decoders/encoders from a machine readable specification of the protocol
 2. Implementations of the protocol transport layer that can be wrapped around a language-specific server.
 
