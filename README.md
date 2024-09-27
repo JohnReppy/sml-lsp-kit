@@ -39,7 +39,7 @@ All of the code is in the `src` directory.
   * `src/lsp-server/json-rpc` -- a library for working with
     [https://www.jsonrpc.org](**JSON RPC**), which is the encoding for **LSP**.
     Note that this library is under development as part of the
-    [https://smlnj.org/doc/smlnj-lib](**SML of NJ Library) and will be removed
+    [https://smlnj.org/doc/smlnj-lib](**SML of NJ Library**) and will be removed
     once it is part of the **SML/NJ** distribution.
 
 ## TODO
