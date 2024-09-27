@@ -5,7 +5,7 @@ As it currently stands, this system is quite incomplete with many holes.
 
 ## Overview
 
-This repository contains infrastructure for writing [https://microsoft.github.io/language-server-protocol](**LSP**)
+This repository contains infrastructure for writing [**LSP**](https://microsoft.github.io/language-server-protocol)
 servers (and possibly clients) in Standard ML (**SML**).  It has two parts:
 1. code for generating type declarations and message decoders/encoders from a =
    machine readable specification of the protocol
@@ -37,9 +37,9 @@ All of the code is in the `src` directory.
   * `src/lsp-server/test-messages` -- files containing various **LSP** messages
     that are used to test message decoding.
   * `src/lsp-server/json-rpc` -- a library for working with
-    [https://www.jsonrpc.org](**JSON RPC**), which is the encoding for **LSP**.
+    [**JSON RPC**](https://www.jsonrpc.org), which is the encoding for **LSP**.
     Note that this library is under development as part of the
-    [https://smlnj.org/doc/smlnj-lib](**SML of NJ Library**) and will be removed
+    [**SML of NJ Library**](https://smlnj.org/doc/smlnj-lib) and will be removed
     once it is part of the **SML/NJ** distribution.
 
 ## TODO
@@ -71,6 +71,6 @@ There is a lot of work to do, here is a partial list.
   * generate a signature for the registration functions implemented
     in the server
 * Write a CML version of the server infrastructure
-* Add MLB files to support the [http://mlton.org](**MLton**) and
-  [https://elsman.com/mlkit/](**MLKit**) compilers
+* Add MLB files to support the [**MLton**](http://mlton.org) and
+  [**MLKit**](https://elsman.com/mlkit) compilers
 * Write a demo server; I'm thinking of a server for typed PCF
