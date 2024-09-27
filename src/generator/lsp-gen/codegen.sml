@@ -193,7 +193,7 @@ structure CodeGen : sig
                 end
           (* create a structure for a request *)
           fun requestStruct (req : MM.request) strName =
-                S.STRdec(strName, NONE, S.BASEstr [
+                S.STRdec(U.toConName strName, NONE, S.BASEstr [
                     nameDec (#method req),
                     paramDec (#params req),
                     resultDec (#result req),
@@ -202,7 +202,7 @@ structure CodeGen : sig
                   ])
           (* create a structure for a notification *)
           fun notifyStruct (req : MM.notification) strName =
-                S.STRdec(strName, NONE, S.BASEstr [
+                S.STRdec(U.toConName strName, NONE, S.BASEstr [
                     nameDec (#method req),
                     paramDec (#params req),
                     decodeParamsDec (#params req)
