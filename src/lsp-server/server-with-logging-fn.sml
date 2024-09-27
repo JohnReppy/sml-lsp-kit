@@ -195,4 +195,455 @@ functor LSPServerWithLoggingFn (L : LANGUAGE_SERVER) : LSP_SERVER =
             lp ()
           end
 
+    local
+      fun registerRequest name decodeParams encodeResult (SERVER{reqTbl, ...}, h) =
+            STbl.insert reqTbl (name, requestHandler decodeParams encodeResult h)
+      fun registerNotification name decodeParams (SERVER{reqTbl, ...}, h) =
+            STbl.insert reqTbl (name, notifyHandler decodeParams h)
+    in
+
+    structure Register = struct
+        structure TextDocument = struct
+            structure Implementation = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Implementation.name
+                          LSP.Server.TextDocument.Implementation.decodeParams
+                          LSP.Server.TextDocument.Implementation.encodeResult
+              end
+            structure TypeDefinition = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.TypeDefinition.name
+                          LSP.Server.TextDocument.TypeDefinition.decodeParams
+                          LSP.Server.TextDocument.TypeDefinition.encodeResult
+                val name = "textDocument/typeDefinition"
+                type params = unit
+                type result = unit
+                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+                fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+              end
+            structure DocumentColor = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.DocumentColor.name
+                          LSP.Server.TextDocument.DocumentColor.decodeParams
+                          LSP.Server.TextDocument.DocumentColor.encodeResult
+              end
+            structure ColorPresentation = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.ColorPresentation.name
+                          LSP.Server.TextDocument.ColorPresentation.decodeParams
+                          LSP.Server.TextDocument.ColorPresentation.encodeResult
+              end
+            structure FoldingRange = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.FoldingRange.name
+                          LSP.Server.TextDocument.FoldingRange.decodeParams
+                          LSP.Server.TextDocument.FoldingRange.encodeResult
+              end
+            structure Declaration = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Declaration.name
+                          LSP.Server.TextDocument.Declaration.decodeParams
+                          LSP.Server.TextDocument.Declaration.encodeResult
+              end
+            structure SelectionRange = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.SelectionRange.name
+                          LSP.Server.TextDocument.SelectionRange.decodeParams
+                          LSP.Server.TextDocument.SelectionRange.encodeResult
+              end
+            structure PrepareCallHierarchy = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.PrepareCallHierarchy.name
+                          LSP.Server.TextDocument.PrepareCallHierarchy.decodeParams
+                          LSP.Server.TextDocument.PrepareCallHierarchy.encodeResult
+              end
+            structure SemanticTokens = struct
+                structure Full = struct
+                    structure Delta = struct
+                      val register = registerRequest
+                            LSP.Server.TextDocument.SemanticTokens.Full.Delta.name
+                            LSP.Server.TextDocument.SemanticTokens.Full.Delta.decodeParams
+                            LSP.Server.TextDocument.SemanticTokens.Full.Delta.encodeResult
+                      end
+                    val register = registerRequest
+                              LSP.Server.TextDocument.SemanticTokens.Full.name
+                              LSP.Server.TextDocument.SemanticTokens.Full.decodeParams
+                              LSP.Server.TextDocument.SemanticTokens.Full.encodeResult
+                  end
+                structure Range = struct
+                    val register = registerRequest
+                              LSP.Server.TextDocument.SemanticTokens.Range.name
+                              LSP.Server.TextDocument.SemanticTokens.Range.decodeParams
+                              LSP.Server.TextDocument.SemanticTokens.Range.encodeResult
+                  end
+              end
+            structure LinkedEditingRange = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.LinkedEditingRange.name
+                          LSP.Server.TextDocument.LinkedEditingRange.decodeParams
+                          LSP.Server.TextDocument.LinkedEditingRange.encodeResult
+              end
+            structure Moniker = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Moniker.name
+                          LSP.Server.TextDocument.Moniker.decodeParams
+                          LSP.Server.TextDocument.Moniker.encodeResult
+              end
+            structure PrepareTypeHierarchy = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.PrepareTypeHierarchy.name
+                          LSP.Server.TextDocument.PrepareTypeHierarchy.decodeParams
+                          LSP.Server.TextDocument.PrepareTypeHierarchy.encodeResult
+              end
+            structure InlineValue = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.InlineValue.name
+                          LSP.Server.TextDocument.InlineValue.decodeParams
+                          LSP.Server.TextDocument.InlineValue.encodeResult
+              end
+            structure InlayHint = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.InlayHint.name
+                          LSP.Server.TextDocument.InlayHint.decodeParams
+                          LSP.Server.TextDocument.InlayHint.encodeResult
+              end
+            structure Diagnostic = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Diagnostic.name
+                          LSP.Server.TextDocument.Diagnostic.decodeParams
+                          LSP.Server.TextDocument.Diagnostic.encodeResult
+              end
+            structure InlineCompletion = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.InlineCompletion.name
+                          LSP.Server.TextDocument.InlineCompletion.decodeParams
+                          LSP.Server.TextDocument.InlineCompletion.encodeResult
+              end
+            structure WillSaveWaitUntil = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.WillSaveWaitUntil.name
+                          LSP.Server.TextDocument.WillSaveWaitUntil.decodeParams
+                          LSP.Server.TextDocument.WillSaveWaitUntil.encodeResult
+              end
+            structure Completion = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Completion.name
+                          LSP.Server.TextDocument.Completion.decodeParams
+                          LSP.Server.TextDocument.Completion.encodeResult
+              end
+            structure Hover = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Hover.name
+                          LSP.Server.TextDocument.Hover.decodeParams
+                          LSP.Server.TextDocument.Hover.encodeResult
+              end
+            structure SignatureHelp = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.SignatureHelp.name
+                          LSP.Server.TextDocument.SignatureHelp.decodeParams
+                          LSP.Server.TextDocument.SignatureHelp.encodeResult
+              end
+            structure Definition = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Definition.name
+                          LSP.Server.TextDocument.Definition.decodeParams
+                          LSP.Server.TextDocument.Definition.encodeResult
+              end
+            structure References = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.References.name
+                          LSP.Server.TextDocument.References.decodeParams
+                          LSP.Server.TextDocument.References.encodeResult
+              end
+            structure DocumentHighlight = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.DocumentHighlight.name
+                          LSP.Server.TextDocument.DocumentHighlight.decodeParams
+                          LSP.Server.TextDocument.DocumentHighlight.encodeResult
+              end
+            structure DocumentSymbol = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.DocumentSymbol.name
+                          LSP.Server.TextDocument.DocumentSymbol.decodeParams
+                          LSP.Server.TextDocument.DocumentSymbol.encodeResult
+              end
+            structure CodeAction = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.CodeAction.name
+                          LSP.Server.TextDocument.CodeAction.decodeParams
+                          LSP.Server.TextDocument.CodeAction.encodeResult
+              end
+            structure CodeLens = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.CodeLens.name
+                          LSP.Server.TextDocument.CodeLens.decodeParams
+                          LSP.Server.TextDocument.CodeLens.encodeResult
+              end
+            structure DocumentLink = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.DocumentLink.name
+                          LSP.Server.TextDocument.DocumentLink.decodeParams
+                          LSP.Server.TextDocument.DocumentLink.encodeResult
+              end
+            structure Formatting = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Formatting.name
+                          LSP.Server.TextDocument.Formatting.decodeParams
+                          LSP.Server.TextDocument.Formatting.encodeResult
+              end
+            structure RangeFormatting = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.RangeFormatting.name
+                          LSP.Server.TextDocument.RangeFormatting.decodeParams
+                          LSP.Server.TextDocument.RangeFormatting.encodeResult
+              end
+            structure RangesFormatting = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.RangesFormatting.name
+                          LSP.Server.TextDocument.RangesFormatting.decodeParams
+                          LSP.Server.TextDocument.RangesFormatting.encodeResult
+              end
+            structure OnTypeFormatting = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.OnTypeFormatting.name
+                          LSP.Server.TextDocument.OnTypeFormatting.decodeParams
+                          LSP.Server.TextDocument.OnTypeFormatting.encodeResult
+              end
+            structure Rename = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.Rename.name
+                          LSP.Server.TextDocument.Rename.decodeParams
+                          LSP.Server.TextDocument.Rename.encodeResult
+              end
+            structure PrepareRename = struct
+                val register = registerRequest
+                          LSP.Server.TextDocument.PrepareRename.name
+                          LSP.Server.TextDocument.PrepareRename.decodeParams
+                          LSP.Server.TextDocument.PrepareRename.encodeResult
+              end
+            structure DidOpen = struct
+                val register = registerNotification
+                          LSP.Server.TextDocument.DidOpen.name
+                          LSP.Server.TextDocument.DidOpen.decodeParams
+              end
+            structure DidChange = struct
+                val register = registerNotification
+                          LSP.Server.TextDocument.DidChange.name
+                          LSP.Server.TextDocument.DidChange.decodeParams
+              end
+            structure DidClose = struct
+                val register = registerNotification
+                          LSP.Server.TextDocument.DidClose.name
+                          LSP.Server.TextDocument.DidClose.decodeParams
+              end
+            structure DidSave = struct
+                val register = registerNotification
+                          LSP.Server.TextDocument.DidSave.name
+                          LSP.Server.TextDocument.DidSave.decodeParams
+              end
+            structure WillSave = struct
+                val register = registerNotification
+                          LSP.Server.TextDocument.WillSave.name
+                          LSP.Server.TextDocument.WillSave.decodeParams
+              end
+          end
+        structure CallHierarchy = struct
+            structure IncomingCalls = struct
+                val register = registerRequest
+                      LSP.Server.CallHierarchy.IncomingCalls.name
+                      LSP.Server.CallHierarchy.IncomingCalls.decodeParams
+                      LSP.Server.CallHierarchy.IncomingCalls.encodeResult
+              end
+            structure OutgoingCalls = struct
+                val register = registerRequest
+                      LSP.Server.CallHierarchy.OutgoingCalls.name
+                      LSP.Server.CallHierarchy.OutgoingCalls.decodeParams
+                      LSP.Server.CallHierarchy.OutgoingCalls.encodeResult
+              end
+          end
+        structure Workspace = struct
+            structure WillCreateFiles = struct
+                val register = registerRequest
+                      LSP.Server.Workspace.WillCreateFiles.name
+                      LSP.Server.Workspace.WillCreateFiles.decodeParams
+                      LSP.Server.Workspace.WillCreateFiles.encodeResult
+              end
+            structure WillRenameFiles = struct
+                val register = registerRequest
+                      LSP.Server.Workspace.WillRenameFiles.name
+                      LSP.Server.Workspace.WillRenameFiles.decodeParams
+                      LSP.Server.Workspace.WillRenameFiles.encodeResult
+              end
+            structure WillDeleteFiles = struct
+                val register = registerRequest
+                      LSP.Server.Workspace.WillDeleteFiles.name
+                      LSP.Server.Workspace.WillDeleteFiles.decodeParams
+                      LSP.Server.Workspace.WillDeleteFiles.encodeResult
+              end
+            structure Diagnostic = struct
+                val register = registerRequest
+                      LSP.Server.Workspace.Diagnostic.name
+                      LSP.Server.Workspace.Diagnostic.decodeParams
+                      LSP.Server.Workspace.Diagnostic.encodeResult
+              end
+            structure Symbol = struct
+                val register = registerRequest
+                      LSP.Server.Workspace.Symbol.name
+                      LSP.Server.Workspace.Symbol.decodeParams
+                      LSP.Server.Workspace.Symbol.encodeResult
+              end
+            structure ExecuteCommand = struct
+                val register = registerRequest
+                      LSP.Server.Workspace.ExecuteCommand.name
+                      LSP.Server.Workspace.ExecuteCommand.decodeParams
+                      LSP.Server.Workspace.ExecuteCommand.encodeResult
+              end
+            structure DidChangeWorkspaceFolders = struct
+                val register = registerNotification
+                      LSP.Server.Workspace.DidChangeWorkspaceFolders.name
+                      LSP.Server.Workspace.DidChangeWorkspaceFolders.decodeParams
+              end
+            structure DidCreateFiles = struct
+                val register = registerNotification
+                      LSP.Server.Workspace.DidCreateFiles.name
+                      LSP.Server.Workspace.DidCreateFiles.decodeParams
+              end
+            structure DidRenameFiles = struct
+                val register = registerNotification
+                      LSP.Server.Workspace.DidRenameFiles.name
+                      LSP.Server.Workspace.DidRenameFiles.decodeParams
+              end
+            structure DidDeleteFiles = struct
+                val register = registerNotification
+                      LSP.Server.Workspace.DidDeleteFiles.name
+                      LSP.Server.Workspace.DidDeleteFiles.decodeParams
+              end
+            structure DidChangeConfiguration = struct
+                val register = registerNotification
+                      LSP.Server.Workspace.DidChangeConfiguration.name
+                      LSP.Server.Workspace.DidChangeConfiguration.decodeParams
+              end
+            structure DidChangeWatchedFiles = struct
+                val register = registerNotification
+                      LSP.Server.Workspace.DidChangeWatchedFiles.name
+                      LSP.Server.Workspace.DidChangeWatchedFiles.decodeParams
+              end
+          end
+        structure TypeHierarchy = struct
+            structure Supertypes = struct
+                val register = registerRequest
+                      LSP.Server.TypeHierarchy.Supertypes.name
+                      LSP.Server.TypeHierarchy.Supertypes.decodeParams
+                      LSP.Server.TypeHierarchy.Supertypes.encodeResult
+              end
+            structure Subtypes = struct
+                val register = registerRequest
+                      LSP.Server.TypeHierarchy.Subtypes.name
+                      LSP.Server.TypeHierarchy.Subtypes.decodeParams
+                      LSP.Server.TypeHierarchy.Subtypes.encodeResult
+              end
+          end
+        structure InlayHint = struct
+            structure Resolve = struct
+                val register = registerRequest
+                      LSP.Server.InlayHint.Resolve.name
+                      LSP.Server.InlayHint.Resolve.decodeParams
+                      LSP.Server.InlayHint.Resolve.encodeResult
+              end
+          end
+        (* We omit the "Server" structure, since server messages are handled
+         * as special cases (i.e., initialize, shutdown, initialized, and exit
+         *)
+        structure CompletionItem = struct
+            structure Resolve = struct
+                val register = registerRequest
+                      LSP.Server.CompletionItem.Resolve.name
+                      LSP.Server.CompletionItem.Resolve.decodeParams
+                      LSP.Server.CompletionItem.Resolve.encodeResult
+              end
+          end
+        structure CodeAction = struct
+            structure Resolve = struct
+                val register = registerRequest
+                      LSP.Server.CodeAction.Resolve.name
+                      LSP.Server.CodeAction.Resolve.decodeParams
+                      LSP.Server.CodeAction.Resolve.encodeResult
+              end
+          end
+        structure WorkspaceSymbol = struct
+            structure Resolve = struct
+                val register = registerRequest
+                      LSP.Server.WorkspaceSymbol.Resolve.name
+                      LSP.Server.WorkspaceSymbol.Resolve.decodeParams
+                      LSP.Server.WorkspaceSymbol.Resolve.encodeResult
+              end
+          end
+        structure CodeLens = struct
+            structure Resolve = struct
+                val register = registerRequest
+                      LSP.Server.CodeLens.Resolve.name
+                      LSP.Server.CodeLens.Resolve.decodeParams
+                      LSP.Server.CodeLens.Resolve.encodeResult
+              end
+          end
+        structure DocumentLink = struct
+            structure Resolve = struct
+                val register = registerRequest
+                      LSP.Server.DocumentLink.Resolve.name
+                      LSP.Server.DocumentLink.Resolve.decodeParams
+                      LSP.Server.DocumentLink.Resolve.encodeResult
+              end
+          end
+        structure Window = struct
+            structure WorkDoneProgress = struct
+                structure Cancel = struct
+                    val register = registerNotification
+                          LSP.Server.Window.WorkDoneProgress.Cancel.name
+                          LSP.Server.Window.WorkDoneProgress.Cancel.decodeParams
+                  end
+              end
+          end
+        structure NotebookDocument = struct
+            structure DidOpen = struct
+                val register = registerNotification
+                      LSP.Server.NotebookDocument.DidOpen.name
+                      LSP.Server.NotebookDocument.DidOpen.decodeParams
+              end
+            structure DidChange = struct
+                val register = registerNotification
+                      LSP.Server.NotebookDocument.DidChange.name
+                      LSP.Server.NotebookDocument.DidChange.decodeParams
+              end
+            structure DidSave = struct
+                val register = registerNotification
+                      LSP.Server.NotebookDocument.DidSave.name
+                      LSP.Server.NotebookDocument.DidSave.decodeParams
+              end
+            structure DidClose = struct
+                val register = registerNotification
+                      LSP.Server.NotebookDocument.DidClose.name
+                      LSP.Server.NotebookDocument.DidClose.decodeParams
+              end
+          end
+        structure Protocol = struct
+            structure SetTrace = struct
+                val register = registerNotification
+                      LSP.Server.Protocol.SetTrace.name
+                      LSP.Server.Protocol.SetTrace.decodeParams
+              end
+            structure CancelRequest = struct
+                val register = registerNotification
+                      LSP.Server.Protocol.CancelRequest.name
+                      LSP.Server.Protocol.CancelRequest.decodeParams
+              end
+            structure Progress = struct
+                val register = registerNotification
+                      LSP.Server.Protocol.Progress.name
+                      LSP.Server.Protocol.Progress.decodeParams
+              end
+          end
+      end (* structure Register *)
+
+    end (* local *)
+
   end

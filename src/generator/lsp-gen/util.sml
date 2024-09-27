@@ -18,11 +18,12 @@ structure Util : sig
      *)
     val toConName : string -> string
 
-    (* convert a request name to a qualified name.  Names that begin with a "$/"
-     * prefix are mapped to the "Protocol" structure, while names that do not
-     * have a prefix are mapped to the "Server" structure.
+    (* convert a request/notification method name to a qualified structure name.
+     * Names that begin with a "$/" prefix are mapped to the "Protocol"
+     * structure, while names that do not have a prefix are mapped to the
+     * "Server" structure.
      *)
-    val messageName : string -> string list
+    val toStructName : string -> string list
 
   end = struct
 
@@ -42,6 +43,14 @@ structure Util : sig
             (* end case *))
           else s
 
+    fun toStructName s = (
+          case String.tokens (fn #"/" => true | _ => false) s
+           of [name] => ["Server", toConName name]
+            | ["$", name] => ["Protocol", toConName name]
+            | qid => List.map toConName qid
+          (* end case *))
+
+(*
     fun messageName s = let
           fun cvtModuleName "$" = "Protocol"
             | cvtModuleName s = toConName s
@@ -54,5 +63,6 @@ structure Util : sig
               | qid => qid
             (* end case *)
           end
+*)
 
   end

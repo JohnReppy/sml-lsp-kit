@@ -1,264 +1,5 @@
 structure LSPServer = struct
-    structure Protocol = struct
-        structure SetTrace = struct
-            val name = "$/setTrace"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure CancelRequest = struct
-            val name = "$/cancelRequest"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Progress = struct
-            val name = "$/progress"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure NotebookDocument = struct
-        structure DidOpen = struct
-            val name = "notebookDocument/didOpen"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidChange = struct
-            val name = "notebookDocument/didChange"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidSave = struct
-            val name = "notebookDocument/didSave"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidClose = struct
-            val name = "notebookDocument/didClose"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure Window = struct
-        structure WorkDoneProgress = struct
-            structure Cancel = struct
-                val name = "window/workDoneProgress/cancel"
-                type params = unit
-                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-              end
-          end
-      end
-    structure DocumentLink = struct
-        structure Resolve = struct
-            val name = "documentLink/resolve"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure CodeLens = struct
-        structure Resolve = struct
-            val name = "codeLens/resolve"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure WorkspaceSymbol = struct
-        structure Resolve = struct
-            val name = "workspaceSymbol/resolve"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure CodeAction = struct
-        structure Resolve = struct
-            val name = "codeAction/resolve"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure CompletionItem = struct
-        structure Resolve = struct
-            val name = "completionItem/resolve"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure Server = struct
-        structure Initialize = struct
-            val name = "initialize"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Shutdown = struct
-            val name = "shutdown"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Initialized = struct
-            val name = "initialized"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Exit = struct
-            val name = "exit"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure InlayHint = struct
-        structure Resolve = struct
-            val name = "inlayHint/resolve"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure TypeHierarchy = struct
-        structure Supertypes = struct
-            val name = "typeHierarchy/supertypes"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Subtypes = struct
-            val name = "typeHierarchy/subtypes"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure Workspace = struct
-        structure WillCreateFiles = struct
-            val name = "workspace/willCreateFiles"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure WillRenameFiles = struct
-            val name = "workspace/willRenameFiles"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure WillDeleteFiles = struct
-            val name = "workspace/willDeleteFiles"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Diagnostic = struct
-            val name = "workspace/diagnostic"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure Symbol = struct
-            val name = "workspace/symbol"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure ExecuteCommand = struct
-            val name = "workspace/executeCommand"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidChangeWorkspaceFolders = struct
-            val name = "workspace/didChangeWorkspaceFolders"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidCreateFiles = struct
-            val name = "workspace/didCreateFiles"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidRenameFiles = struct
-            val name = "workspace/didRenameFiles"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidDeleteFiles = struct
-            val name = "workspace/didDeleteFiles"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidChangeConfiguration = struct
-            val name = "workspace/didChangeConfiguration"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-        structure DidChangeWatchedFiles = struct
-            val name = "workspace/didChangeWatchedFiles"
-            type params = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-          end
-      end
-    structure CallHierarchy = struct
-        structure IncomingCalls = struct
-            val name = "callHierarchy/incomingCalls"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-        structure OutgoingCalls = struct
-            val name = "callHierarchy/outgoingCalls"
-            type params = unit
-            type result = unit
-            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-          end
-      end
     structure TextDocument = struct
-        structure SemanticTokens = struct
-            structure Full = struct
-                structure Delta = struct
-                    val name = "textDocument/semanticTokens/full/delta"
-                    type params = unit
-                    type result = unit
-                    fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-                    fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-                  end
-              end
-            structure Full = struct
-                val name = "textDocument/semanticTokens/full"
-                type params = unit
-                type result = unit
-                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-                fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-              end
-            structure Range = struct
-                val name = "textDocument/semanticTokens/range"
-                type params = unit
-                type result = unit
-                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
-                fun encodeResult result = raise (Fail "UNIMPLEMENTED")
-              end
-          end
         structure Implementation = struct
             val name = "textDocument/implementation"
             type params = unit
@@ -314,6 +55,29 @@ structure LSPServer = struct
             type result = unit
             fun decodeParams params = raise (Fail "UNIMPLEMENTED")
             fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure SemanticTokens = struct
+            structure Full = struct
+                structure Delta = struct
+                    val name = "textDocument/semanticTokens/full/delta"
+                    type params = unit
+                    type result = unit
+                    fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+                    fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+                  end
+                val name = "textDocument/semanticTokens/full"
+                type params = unit
+                type result = unit
+                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+                fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+              end
+            structure Range = struct
+                val name = "textDocument/semanticTokens/range"
+                type params = unit
+                type result = unit
+                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+                fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+              end
           end
         structure LinkedEditingRange = struct
             val name = "textDocument/linkedEditingRange"
@@ -505,6 +269,240 @@ structure LSPServer = struct
           end
         structure WillSave = struct
             val name = "textDocument/willSave"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure CallHierarchy = struct
+        structure IncomingCalls = struct
+            val name = "callHierarchy/incomingCalls"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure OutgoingCalls = struct
+            val name = "callHierarchy/outgoingCalls"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure Workspace = struct
+        structure WillCreateFiles = struct
+            val name = "workspace/willCreateFiles"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure WillRenameFiles = struct
+            val name = "workspace/willRenameFiles"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure WillDeleteFiles = struct
+            val name = "workspace/willDeleteFiles"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Diagnostic = struct
+            val name = "workspace/diagnostic"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Symbol = struct
+            val name = "workspace/symbol"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure ExecuteCommand = struct
+            val name = "workspace/executeCommand"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidChangeWorkspaceFolders = struct
+            val name = "workspace/didChangeWorkspaceFolders"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidCreateFiles = struct
+            val name = "workspace/didCreateFiles"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidRenameFiles = struct
+            val name = "workspace/didRenameFiles"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidDeleteFiles = struct
+            val name = "workspace/didDeleteFiles"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidChangeConfiguration = struct
+            val name = "workspace/didChangeConfiguration"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidChangeWatchedFiles = struct
+            val name = "workspace/didChangeWatchedFiles"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure TypeHierarchy = struct
+        structure Supertypes = struct
+            val name = "typeHierarchy/supertypes"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Subtypes = struct
+            val name = "typeHierarchy/subtypes"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure InlayHint = struct
+        structure Resolve = struct
+            val name = "inlayHint/resolve"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure Server = struct
+        structure Initialize = struct
+            val name = "initialize"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Shutdown = struct
+            val name = "shutdown"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Initialized = struct
+            val name = "initialized"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Exit = struct
+            val name = "exit"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure CompletionItem = struct
+        structure Resolve = struct
+            val name = "completionItem/resolve"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure CodeAction = struct
+        structure Resolve = struct
+            val name = "codeAction/resolve"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure WorkspaceSymbol = struct
+        structure Resolve = struct
+            val name = "workspaceSymbol/resolve"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure CodeLens = struct
+        structure Resolve = struct
+            val name = "codeLens/resolve"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure DocumentLink = struct
+        structure Resolve = struct
+            val name = "documentLink/resolve"
+            type params = unit
+            type result = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeResult result = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure Window = struct
+        structure WorkDoneProgress = struct
+            structure Cancel = struct
+                val name = "window/workDoneProgress/cancel"
+                type params = unit
+                fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+              end
+          end
+      end
+    structure NotebookDocument = struct
+        structure DidOpen = struct
+            val name = "notebookDocument/didOpen"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidChange = struct
+            val name = "notebookDocument/didChange"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidSave = struct
+            val name = "notebookDocument/didSave"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure DidClose = struct
+            val name = "notebookDocument/didClose"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+      end
+    structure Protocol = struct
+        structure SetTrace = struct
+            val name = "$/setTrace"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure CancelRequest = struct
+            val name = "$/cancelRequest"
+            type params = unit
+            fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+          end
+        structure Progress = struct
+            val name = "$/progress"
             type params = unit
             fun decodeParams params = raise (Fail "UNIMPLEMENTED")
           end

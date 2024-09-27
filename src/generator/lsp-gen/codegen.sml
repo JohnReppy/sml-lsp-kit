@@ -130,9 +130,9 @@ structure CodeGen : sig
       }
 
     (* insert a specification into a module nest *)
-    fun insert mkSpec = let
-          fun ins (MOD{name, items, kids}, [id]) =
-                MOD{name=name, items=mkSpec id :: items, kids=kids}
+    fun insert (root, mmName, items') = let
+          fun ins (MOD{name, items, kids}, []) =
+                MOD{name=name, items=items @ items', kids=kids}
             | ins (MOD{name, items, kids}, m::r) = let
                 fun lp [] = [ins (MOD{name=m, items=[], kids=[]}, r)]
                   | lp ((kid as MOD{name, ...})::rkids) = if (name = m)
@@ -141,9 +141,8 @@ structure CodeGen : sig
                 in
                   MOD{name=name, items=items, kids=lp kids}
                 end
-           | ins _ = raise Fail "bogus message name"
           in
-            fn (root, mmName) => ins(root, U.messageName mmName)
+            ins(root, U.toStructName mmName)
           end
 
     (* generate the request-message-handler structure for one side of the protocol.
@@ -192,30 +191,28 @@ structure CodeGen : sig
                   S.simpleDec("encodeResult", ["result"], body)
                 end
           (* create a structure for a request *)
-          fun requestStruct (req : MM.request) strName =
-                S.STRdec(U.toConName strName, NONE, S.BASEstr [
-                    nameDec (#method req),
-                    paramDec (#params req),
-                    resultDec (#result req),
-                    decodeParamsDec (#params req),
-                    encodeResultDec (#result req)
-                  ])
+          fun requestDecs (req : MM.request) = [
+                  nameDec (#method req),
+                  paramDec (#params req),
+                  resultDec (#result req),
+                  decodeParamsDec (#params req),
+                  encodeResultDec (#result req)
+                ]
           (* create a structure for a notification *)
-          fun notifyStruct (req : MM.notification) strName =
-                S.STRdec(U.toConName strName, NONE, S.BASEstr [
-                    nameDec (#method req),
-                    paramDec (#params req),
-                    decodeParamsDec (#params req)
-                  ])
+          fun notifyDecs (req : MM.notification) = [
+                  nameDec (#method req),
+                  paramDec (#params req),
+                  decodeParamsDec (#params req)
+                ]
           (* insert a request into the module nest *)
           fun insertReq (req : MM.request, nest) =
                 if canRecv(#messageDirection req)
-                  then insert (requestStruct req) (nest, #method req)
+                  then insert (nest, #method req, requestDecs req)
                   else nest
           (* insert a notification into the module nest *)
           fun insertNote (note : MM.notification, nest) =
                 if canRecv(#messageDirection note)
-                  then insert (notifyStruct note) (nest, #method note)
+                  then insert (nest, #method note, notifyDecs note)
                   else nest
           val rootMod = MOD{name=structName, kids=[], items=[]}
           (* add requests to module nest *)
@@ -224,7 +221,7 @@ structure CodeGen : sig
           val mNest = List.foldl insertNote mNest (#notifications mm)
           (* convert the module nest to a signature *)
           val MOD{items, kids, ...} = mNest
-          fun cvt (items, kids) = S.BASEstr(List.foldl cvtMod (List.rev items) kids)
+          fun cvt (items, kids) = S.BASEstr(List.foldr cvtMod items kids)
           and cvtMod (MOD{name, items, kids}, decs) =
                 S.STRdec(name, NONE, cvt (items, kids)) :: decs
           in
