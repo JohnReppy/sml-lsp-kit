@@ -1,0 +1,32 @@
+(* sources.cm
+ *
+ * COPYRIGHT (c) 2023 John Reppy (http://cs.uchicago.edu/~jhr)
+ * All rights reserved.
+ *)
+
+Library
+
+  structure CodeGen
+  structure LoadMetaModel
+  structure Main
+  structure MetaModel
+
+is
+
+  $/basis.cm
+  $/smlnj-lib.cm
+  $/hash-cons-lib.cm
+  $/json-lib.cm
+  $/pp-lib.cm
+
+  analyze.sml
+  codegen.sml
+  load-meta-model.sml
+  lsp-types.sml
+  main.sml
+  meta-model.sml
+  print-sml.sml
+  sml.sml
+  string-subst.sml
+  util.sml
+

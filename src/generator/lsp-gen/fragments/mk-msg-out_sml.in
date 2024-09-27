@@ -1,0 +1,18 @@
+    structure CB = CharBuffer
+    structure JBP = JSONBufferPrinter
+
+    (* given an encoding function for the message, a char buffer for encoding
+     * JSON RPC messages, and a text-output stream, encode and output a message.
+     *)
+    fun mkMsgOut encode (cb, outS) = let
+          val jsonPr = JBP.new cb
+          fun pr s = TextIO.output(outS, s)
+          in
+            fn arg => (
+              CB.clear cb;
+              encode(jsonPr, arg);
+              pr "Content-Length: ";
+              pr (Int.toString(CB.length cb));
+              pr "\r\n\r\n";
+              pr (CB.contents cb))
+          end

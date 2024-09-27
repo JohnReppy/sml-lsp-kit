@@ -50,18 +50,20 @@ There is a lot of work to do, here is a partial list.
   much in the way of code generation yet.  Specifically, we need to do
   the following:
   * generate **SML** types for the **LSP**
-  * for each request `R`, generate a structure
+  * for each request `R`, generate a structure with the signature
     ```sml
     structure R : sig
+        val name : string
         type params = { ... }
         type result = { ... }
         val decodeParams : (string * JSONRPC.value) list -> params
         val encodeResult : result -> JSON.value
       end
     ```
-  * for each notification `N`, generate a structure
+  * for each notification `N`, generate a structure with the signature
     ```sml
     structure N : sig
+        val name : string
         type params = { ... }
         val decodeParams : (string * JSONRPC.value) list -> params
       end
