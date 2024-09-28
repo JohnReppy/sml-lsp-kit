@@ -500,11 +500,13 @@ structure LSPServer = struct
             val name = "$/cancelRequest"
             type params = unit
             fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeParams params = raise (Fail "UNIMPLEMENTED")
           end
         structure Progress = struct
             val name = "$/progress"
             type params = unit
             fun decodeParams params = raise (Fail "UNIMPLEMENTED")
+            fun encodeParams params = raise (Fail "UNIMPLEMENTED")
           end
       end
   end

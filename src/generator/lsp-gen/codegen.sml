@@ -24,6 +24,15 @@ structure CodeGen : sig
       (*! generate clientToServer decoders and serverToClient encoders. *)
       | ServerSide
 
+    (* code-generation targets; these are used to support selective omission
+     * of certain messages in the output.
+     *)
+    datatype target
+      (* the parameter and result types and encoder/decoder functions *)
+      = Coder
+      (* the registration signature *)
+      | Registration
+
     (*! options that control the generator *)
     type options = {
           (*! the directory for the generated output *)
@@ -37,10 +46,12 @@ structure CodeGen : sig
           (*! if true, then generate the type definitions *)
           types : bool,
           (*! specifies which side of the protocol is generated *)
-          side : side
+          side : side,
+          (*! a predicate for testing if generator should omit code *)
+          omitMessage : side * target * string -> bool
         }
 
-    val gen : MetaModel.t -> options -> string -> unit
+    val gen : MetaModel.t * options -> unit
 
   end = struct
 
@@ -51,6 +62,10 @@ structure CodeGen : sig
 
     datatype side = ClientSide | ServerSide
 
+    datatype target
+      = Coder
+      | Registration
+
     (*! options that control the generator *)
     type options = {
           (*! the directory for the generated output *)
@@ -64,16 +79,20 @@ structure CodeGen : sig
           (*! if true, then generate the type definitions *)
           types : bool,
           (*! specifies which side of the protocol is generated *)
-          side : side
+          side : side,
+          (*! a predicate for testing if generator should omit code *)
+          omitMessage : side * target * string -> bool
         }
 
-    (* `true` for messages that can be received by the client (and sent by the server). *)
-    fun clientRecv MM.ClientToServer = false
-      | clientRecv _ = true
+    fun canRecv (_, MM.Both) = true
+      | canRecv (ClientSide, MM.ServerToClient) = true
+      | canRecv (ServerSide, MM.ClientToServer) = true
+      | canRecv _ = false
 
-    (* `true` for messages that can be received by the server (and sent by the client). *)
-    fun clientSend MM.ServerToClient = false
-      | clientSend _ = true
+    fun canSend (_, MM.Both) = true
+      | canSend (ClientSide, MM.ClientToServer) = true
+      | canSend (ServerSide, MM.ServerToClient) = true
+      | canSend _ = false
 
     fun filterReq sel pred (req : MM.request) = pred(sel req)
     fun filterNote sel pred (note : MM.notification) = pred(sel note)
@@ -150,23 +169,46 @@ structure CodeGen : sig
      * names to define the hierarchy) of structures; one per request/notification.
      * Specifically, for each request `R`, we generate
      *
-     *    structure R : sig
-     *        val name : string
+     *    structure R = struct
+     *        val name : string = "..."
      *        type params = { ... }
      *        type result = { ... }
+     *          ... encode/decode functions ...
+     *      end
+     *
+     * The "encode/decode" functions that are generated depend on the side of the
+     * protocol (client or server) and the direction of the request.  If the request
+     * can be received, then we generate the functions
+     *
      *        fun decodeParams flds = ...
      *        fun encodeResult { ... } = ...
-     *      end
      *
-     * and for each notification `N`, we generate with the signature
+     * and if the request can be sent, we generate the functions
      *
-     *    structure N : sig
-     *        val name : string
+     *        fun encodeParams { ... } = ...
+     *        fun decodeResult value = ...
+     *
+     * Likewise, for each notification `N`, we generate with the structure
+     *
+     *    structure N = struct
+     *        val name : string = "..."
      *        type params = { ... }
-     *        fun decodeParams flds = ...
+     *          ... encode/decode functions ...
      *      end
+     *
+     * If the request can be received, then we generate the function
+     *
+     *        fun decodeParams flds = ...
+     *
+     * and if the request can be sent, we generate the function
+     *
+     *        fun encodeParams { ... } = ...
+     *
+     * Note that some requests/notifications can be sent and received by both sides
+     * of the protocol.
      *)
-    fun genRequestMessageStruct (structName, canRecv, mm : MetaModel.t) = let
+    fun genRequestMessageStruct (mm : MM.t, flags : options, structName) =
+          let
           (* the name component of a structure *)
           fun nameDec name = S.simpleVB("name", S.STRINGexp name)
           (* a type definition for the request/notification parameters type *)
@@ -184,34 +226,58 @@ structure CodeGen : sig
                 in
                   S.simpleDec("decodeParams", ["params"], body)
                 end
+          (* an encoder for the request/notification parameters *)
+          fun encodeParamsDec typs = let
+(* FIXME: actually generate the encoder *)
+                val body = S.failExp "UNIMPLEMENTED"
+                in
+                  S.simpleDec("encodeParams", ["params"], body)
+                end
+          (* an encoder for the request result *)
           fun encodeResultDec typ = let
 (* FIXME: actually generate the encoder *)
                 val body = S.failExp "UNIMPLEMENTED"
                 in
                   S.simpleDec("encodeResult", ["result"], body)
                 end
+          (* an decoder for the request result *)
+          fun decodeResultDec typ = let
+(* FIXME: actually generate the decoder *)
+                val body = S.failExp "UNIMPLEMENTED"
+                in
+                  S.simpleDec("decodeResult", ["result"], body)
+                end
           (* create a structure for a request *)
-          fun requestDecs (req : MM.request) = [
-                  nameDec (#method req),
-                  paramDec (#params req),
-                  resultDec (#result req),
-                  decodeParamsDec (#params req),
-                  encodeResultDec (#result req)
-                ]
+          fun requestDecs (req : MM.request) =
+                  nameDec (#method req) ::
+                  paramDec (#params req) ::
+                  resultDec (#result req) ::
+                  (if canRecv(#side flags, #messageDirection req)
+                    then [decodeParamsDec (#params req), encodeResultDec (#result req)]
+                    else []) @
+                  (if canSend(#side flags, #messageDirection req)
+                    then [encodeParamsDec (#params req), decodeResultDec (#result req)]
+                    else [])
           (* create a structure for a notification *)
-          fun notifyDecs (req : MM.notification) = [
-                  nameDec (#method req),
-                  paramDec (#params req),
-                  decodeParamsDec (#params req)
-                ]
+          fun notifyDecs (note : MM.notification) =
+                  nameDec (#method note) ::
+                  paramDec (#params note) ::
+                  (if canRecv(#side flags, #messageDirection note)
+                    then [decodeParamsDec (#params note)]
+                    else []) @
+                  (if canSend(#side flags, #messageDirection note)
+                    then [encodeParamsDec (#params note)]
+                    else [])
           (* insert a request into the module nest *)
           fun insertReq (req : MM.request, nest) =
-                if canRecv(#messageDirection req)
+                if canRecv(#side flags, #messageDirection req)
+                andalso not(#omitMessage flags (#side flags, Coder, #method req))
                   then insert (nest, #method req, requestDecs req)
                   else nest
           (* insert a notification into the module nest *)
           fun insertNote (note : MM.notification, nest) =
-                if canRecv(#messageDirection note)
+                if canRecv(#side flags, #messageDirection note)
+                andalso not(#omitMessage flags (#side flags, Coder, #method note))
                   then insert (nest, #method note, notifyDecs note)
                   else nest
           val rootMod = MOD{name=structName, kids=[], items=[]}
@@ -274,19 +340,19 @@ structure CodeGen : sig
             S.SEQtop(List.map S.DECtop (genEnums mm))
           end
 
-    fun genClientCode (mm : MetaModel.t, info : Analyze.info) () = let
-          val reqStruct = genRequestMessageStruct ("LSPClient", clientRecv, mm)
+    fun genClientCode (mm, flags, info : Analyze.info) () = let
+          val reqStruct = genRequestMessageStruct (mm, flags, "LSPClient")
           in
             reqStruct
           end
 
-    fun genServerCode (mm : MetaModel.t, info : Analyze.info) () = let
-          val reqStruct = genRequestMessageStruct ("LSPServer", clientSend, mm)
+    fun genServerCode (mm, flags, info : Analyze.info) () = let
+          val reqStruct = genRequestMessageStruct (mm, flags, "LSPServer")
           in
             reqStruct
           end
 
-    fun gen (mm : MetaModel.t) (flags : options) stem = let
+    fun gen (mm : MetaModel.t, flags : options) = let
           (* prettyprint the generated declarations to an output file *)
           fun withFile fname (gen : unit -> S.top_decl) = let
                 val outS = TextIO.openOut (OS.Path.concat(#outputDir flags, fname))
@@ -309,9 +375,9 @@ structure CodeGen : sig
               else ();
             case (#side flags)
              of ClientSide =>
-                  withFile "lsp-client.sml" (genClientCode (mm, info))
+                  withFile "lsp-client.sml" (genClientCode (mm, flags, info))
               | ServerSide =>
-                  withFile "lsp-server.sml" (genServerCode (mm, info))
+                  withFile "lsp-server.sml" (genServerCode (mm, flags, info))
             (* end case *)
           end
 
