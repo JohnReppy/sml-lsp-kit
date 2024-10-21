@@ -9,8 +9,16 @@
  * generated code.
  *
  * COMMENTS:
+ *
  *  - a common use of the "or" kind is `ty | null`.  Should map this to
- *    and SML option type.
+ *    a special datatype (maybe option)
+ *
+ *  - another common pattern for "or" is `ty | ty[]`; should just replace it
+ *    with a `ty list`
+ *
+ *  - map LSPAny to `JSON.value`
+ *
+ *  - map LSPObject to `(string * JSON.value) list`
  *)
 
 structure LSPTypes : sig
@@ -43,7 +51,9 @@ structure LSPTypes : sig
 
         datatype rep
           = T_Base of MetaModel.base_ty
-          | T_Reference of Atom.atom
+          | T_StructRef of Atom.atom            (* reference to structure *)
+          | T_EnumRef of Atom.atom              (* reference to enumeration *)
+          | T_AliasRef of Atom.atom * typ       (* reference to type alias *)
           | T_Array of typ
           | T_Map of {key : typ, value : typ}
           | T_And of typ list

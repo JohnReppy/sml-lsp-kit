@@ -76,7 +76,7 @@ structure MetaModel =
 	value : typ
       }
 
-    (*! Represents an `and` type
+    (*! Represents an `and` type, which is a merging of object types.
      * (e.g., TextDocumentParams & WorkDoneProgressParams`).
      *
      * The JSON representation is an object with two fields: "kind" (== 'and')
@@ -98,21 +98,21 @@ structure MetaModel =
      *)
     and tuple_ty = typ list
 
-    (*! Represents a string literal type (e.g., `kind: 'rename'`).
+    (*! Represents a string literal type (e.g., `value: 'rename'`).
      *
      * The JSON representation is an object with two fields: "kind" (== 'stringLiteral')
      * and "value".
      *)
     and string_lit_ty = string
 
-    (*! Represents an integer literal type (e.g., `kind: 1`).
+    (*! Represents an integer literal type (e.g., `value: 1`).
      *
      * The JSON representation is an object with two fields: "kind" (== 'integerLiteral')
      * and "value".
      *)
     and integer_lit_ty = number
 
-    (*! Represents a boolean literal type (e.g., `kind: true`).
+    (*! Represents a boolean literal type (e.g., `value: true`).
      *
      * The JSON representation is an object with two fields: "kind" (== 'booleanLiteral')
      * and "value".

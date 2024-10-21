@@ -12,6 +12,8 @@
  *      lsp-client.sml
  *
  * TODO:
+ *    - add encoders/decoders for error data, which is an optional component
+ *      of requests
  *    - add option for including documentation in generated code
  *)
 
