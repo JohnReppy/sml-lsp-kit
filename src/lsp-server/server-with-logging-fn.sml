@@ -95,6 +95,101 @@ functor LSPServerWithLoggingFn (L : LANGUAGE_SERVER) : LSP_SERVER =
           (* send response to client *)
           send serv)
 
+    fun create : {inp, outp, logp} = let
+          val reqTbl = STbl.mkTable (256, Fail "request table")
+          (* insert default handlers for known messages *)
+          val () = List.app (fn id => STbl.insert reqTbl (id, ??)) [
+                  (* requests *)
+                  "textDocument/implementation",
+                  "textDocument/typeDefinition",
+                  "textDocument/documentColor",
+                  "textDocument/colorPresentation",
+                  "textDocument/foldingRange",
+                  "textDocument/declaration",
+                  "textDocument/selectionRange",
+                  "textDocument/prepareCallHierarchy",
+                  "callHierarchy/incomingCalls",
+                  "callHierarchy/outgoingCalls",
+                  "textDocument/semanticTokens/full",
+                  "textDocument/semanticTokens/full/delta",
+                  "textDocument/semanticTokens/range",
+                  "textDocument/linkedEditingRange",
+                  "workspace/willCreateFiles",
+                  "workspace/willRenameFiles",
+                  "workspace/willDeleteFiles",
+                  "textDocument/moniker",
+                  "textDocument/prepareTypeHierarchy",
+                  "typeHierarchy/supertypes",
+                  "typeHierarchy/subtypes",
+                  "textDocument/inlineValue",
+                  "textDocument/inlayHint",
+                  "inlayHint/resolve",
+                  "textDocument/diagnostic",
+                  "workspace/diagnostic",
+                  "textDocument/inlineCompletion",
+                  "initialize",
+                  "shutdown",
+                  "textDocument/willSaveWaitUntil",
+                  "textDocument/completion",
+                  "completionItem/resolve",
+                  "textDocument/hover",
+                  "textDocument/signatureHelp",
+                  "textDocument/definition",
+                  "textDocument/references",
+                  "textDocument/documentHighlight",
+                  "textDocument/documentSymbol",
+                  "textDocument/codeAction",
+                  "codeAction/resolve",
+                  "workspace/symbol",
+                  "workspaceSymbol/resolve",
+                  "textDocument/codeLens",
+                  "codeLens/resolve",
+                  "textDocument/documentLink",
+                  "documentLink/resolve",
+                  "textDocument/formatting",
+                  "textDocument/rangeFormatting",
+                  "textDocument/rangesFormatting",
+                  "textDocument/onTypeFormatting",
+                  "textDocument/rename",
+                  "textDocument/prepareRename",
+                  "workspace/executeCommand",
+                  (* notifications *)
+                  "workspace/didChangeWorkspaceFolders",
+                  "window/workDoneProgress/cancel",
+                  "workspace/didCreateFiles",
+                  "workspace/didRenameFiles",
+                  "workspace/didDeleteFiles",
+                  "notebookDocument/didOpen",
+                  "notebookDocument/didChange",
+                  "notebookDocument/didSave",
+                  "notebookDocument/didClose",
+                  "initialized",
+                  "exit",
+                  "workspace/didChangeConfiguration",
+                  "textDocument/didOpen",
+                  "textDocument/didChange",
+                  "textDocument/didClose",
+                  "textDocument/didSave",
+                  "textDocument/willSave",
+                  "workspace/didChangeWatchedFiles",
+                  "$/setTrace",
+                  "$/cancelRequest",
+                  "$/progress"
+                ]
+          in
+            SERVER{
+                reqTbl = reqTbl,
+                pendingReqs = ref[],
+                inp = ref(TextIO.getInstream inp),
+                outp = ref(TextIO.getOutstream outp),
+                outBuf = CharBuffer.new 1024,
+                logp = logp,
+                nextId = ref 0w1,
+                status = ref WaitingForInit,
+                state = L.create ()
+              }
+          end
+
 (* the following is a version with support for logging.  If we disable logging,
  * then we can directly encode messages into the outBuf.
  *)
@@ -119,25 +214,51 @@ functor LSPServerWithLoggingFn (L : LANGUAGE_SERVER) : LSP_SERVER =
                 in
                   sendResponse (serv, response)
                 end
-            | handler (serv, _) = sendResponse (serv, Encode.error{
+            | handler (serv, Request {id, method, ...}) =
+                sendResponse (serv, Encode.error{
+                    id = id,
+                    code = JSONRPC.errInvalidParams,
+                    message = concat[
+                        "expected object for request '", method, "' parameters"
+                      ]
+                  })
+            | handler (serv, Notify{method, ...]) = sendResponse (serv, Encode.error{
                   id = id,
-                  code = JSONRPC.errInvalidParams,
-                  message = "expected object for request parameters"
+                  code = JSONRPC.errInvalidRequest,
+                  message = concat["missing ID for request '", method, "'"]
                 })
           in
             handler
           end
 
+    fun notificationHandler decodeParams handlerFn = let
+(* TODO: log errors *)
+          fun handler (serv, Notify{params=SOME(OBJECT flds), ...}) = (
+                case decodeParams flds
+                 of SOME params => handlerFn (stateOf serv, params)
+                  | NONE => ()
+                (* end case *)))
+            | handler (serv, Notify{method, ...}) = () (* ignore invalid params *)
+(* TODO: here we could report an error to the client *)
+            | handler (serv, Request{method, id, ...}) = ()
+          in
+            handler
+          end
+
+    (* handler for the "initialize" request *)
     val handleInitialize =
           requestHandler
             LSP.Initialize.decodeParams
             LSP.Initialize.encodeResult
             L.initialize
 
-    (* handler for a `shutdown` request *)
+    (* handler for the "initialized" request *)
+    val handleInitialized =
+
+    (* handler for a "shutdown" request *)
     fun handleShutdown serv = ??
 
-    (* handler for an `exit` notification *)
+    (* handler for an "exit" notification *)
     fun handleExit (serv, Notify _) = (
           L.exit (stateOf serv);
           case getStatus serv
@@ -199,7 +320,7 @@ functor LSPServerWithLoggingFn (L : LANGUAGE_SERVER) : LSP_SERVER =
       fun registerRequest name decodeParams encodeResult (SERVER{reqTbl, ...}, h) =
             STbl.insert reqTbl (name, requestHandler decodeParams encodeResult h)
       fun registerNotification name decodeParams (SERVER{reqTbl, ...}, h) =
-            STbl.insert reqTbl (name, notifyHandler decodeParams h)
+            STbl.insert reqTbl (name, notificationHandler decodeParams h)
     in
 
     structure Register = struct
