@@ -93,7 +93,7 @@ structure Analyze : sig
             env
           end
 
-    fun processStruct (env, s : MM.data_struct) =
+    fun processStruct (env, s : MM.data_struct) = ??
 
     and processAlias (env, a : MM.type_alias) = let
           val typ = processType (env, ty)
@@ -102,22 +102,22 @@ structure Analyze : sig
           end
 
     and processType (env, ty) = (case ty
-           of MM.T_Base of base_ty
+           of MM.T_Base ty => ??
             | MM.T_Reference name => (case resolveRef(env, name)
-                 of StructTy s =>
-                  | EnumTy e =>
-                  | AliasTy a =>
+                 of StructTy s => ??
+                  | EnumTy e => ??
+                  | AliasTy a => ??
                 (* end case *))
-            | MM.T_Array ty =>
-            | MM.T_Map{key, value} =>
-            | MM.T_And tys =>
-            | MM.T_Or[ty1, MM.T_Base MM.T_Null] =>
-            | MM.T_Or tys =>
-            | MM.T_Tuple tys =>
-            | MM.T_StructureLiteral strLit =>
-            | MM.T_StringLiteral sLit =>
-            | MM.T_IntegerLiteral iLit =>
-            | MM.T_BooleanLiteral bLit =>
+            | MM.T_Array ty => ??
+            | MM.T_Map{key, value} => ??
+            | MM.T_And tys => ??
+            | MM.T_Or[ty1, MM.T_Base MM.T_Null] => ??
+            | MM.T_Or tys => ??
+            | MM.T_Tuple tys => ??
+            | MM.T_StructureLiteral strLit => ??
+            | MM.T_StringLiteral sLit => ??
+            | MM.T_IntegerLiteral iLit => ??
+            | MM.T_BooleanLiteral bLit => ??
           (* end case *))
 
     fun processEnums (enums : MM.enum list) = let
